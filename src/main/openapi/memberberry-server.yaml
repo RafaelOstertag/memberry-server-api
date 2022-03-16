@@ -1,0 +1,274 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: Memberberry
+  description: Memberberry API. A Berry is a ToDo list entry.
+  contact:
+    name: Rafael Ostertag
+    email: rafi@guengel.ch
+  license:
+    name: BSD 2 Clause
+    url: 'https://opensource.org/licenses/BSD-2-Clause'
+servers:
+  - url: 'http://localhost:8080'
+    description: Local Development
+  - url: 'https://memberberry.guengel.ch/api'
+    description: Production
+components:
+  securitySchemes:
+    guengel-sso:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/auth'
+          tokenUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/token'
+          refreshUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/token'
+          scopes: {}
+      description: ''
+  schemas:
+    Berry:
+      title: Berry
+      type: object
+      description: 'A Berry, aka. a ToDo entry.'
+      properties:
+        title:
+          type: string
+          description: Berry title. Short description of the Berry.
+          minLength: 1
+          maxLength: 255
+        state:
+          $ref: '#/components/schemas/BerryState'
+        description:
+          type: string
+          description: Optional long description of the Berry.
+      required:
+        - title
+        - state
+    ErrorMessage:
+      title: Error Message
+      type: object
+      description: Error message.
+      properties:
+        reason:
+          type: string
+          description: Reason of the error
+      required:
+        - reason
+    BerryWithId:
+      title: Berry with Id
+      description: Berry with an ID.
+      allOf:
+        - $ref: '#/components/schemas/BerryID'
+        - $ref: '#/components/schemas/Berry'
+        - $ref: '#/components/schemas/BerryAudit'
+    BerryID:
+      type: string
+      title: Berry ID
+      description: ID of a Berry
+      minLength: 1
+    BerryState:
+      type: string
+      title: Berry State
+      description: State of a Berry. A Berry can be `open` or `done`.
+      enum:
+        - open
+        - closed
+    BerryAudit:
+      title: Berry Audit
+      type: object
+      description: Berry audit informatoin
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: Date/time the Berry has been created
+        updated:
+          type: string
+          format: date-time
+          description: 'Date/Time the Berry has been updated, if available.'
+      required:
+        - created
+  parameters:
+    page-size:
+      name: page-size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 250
+        format: int32
+        default: 25
+      description: Page size
+    page-index:
+      name: page-index
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        format: int32
+        default: 0
+      description: 'Page number to retrieve, zero based'
+    berry-state:
+      name: berry-state
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - open
+          - closed
+      description: State of the Berries
+  responses:
+    ErrorResponse:
+      description: Generic error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+paths:
+  /v1/berries:
+    get:
+      summary: Get Berries
+      tags:
+        - Berry
+      operationId: getBerries
+      description: Get all Berries.
+      parameters:
+        - $ref: '#/components/parameters/page-size'
+        - $ref: '#/components/parameters/page-index'
+        - $ref: '#/components/parameters/berry-state'
+      responses:
+        '200':
+          description: OK
+          headers:
+            x-page-size:
+              schema:
+                type: integer
+              description: Current page size
+            x-page-index:
+              schema:
+                type: integer
+              description: Current page index
+            x-previous-page-index:
+              schema:
+                type: integer
+              description: 'Previous page index, if applicable'
+            x-next-page-index:
+              schema:
+                type: integer
+              description: 'Next page index, if applicable'
+            x-first-page:
+              schema:
+                type: boolean
+              description: Indicates whether or not this is the first page
+            x-last-page:
+              schema:
+                type: boolean
+              description: Indicate whether or not this is the last page
+            x-total-pages:
+              schema:
+                type: integer
+              description: Number of pages with this page size
+            x-total-entries:
+              schema:
+                type: integer
+              description: Total number of entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BerryWithId'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      summary: Create Berry
+      operationId: createBerry
+      responses:
+        '201':
+          description: Created
+          headers:
+            location:
+              schema:
+                type: string
+                format: uri
+              description: URI of the new Berry
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+      description: Create a new Berry.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Berry'
+      tags:
+        - Berry
+  '/v1/berries/{berry-id}':
+    parameters:
+      - schema:
+          type: string
+        name: berry-id
+        in: path
+        required: true
+    get:
+      summary: Get Berry
+      tags:
+        - Berry
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BerryWithId'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      operationId: getBerry
+      description: Get a Berry by ID
+    put:
+      summary: Update Berry
+      operationId: updateBerry
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      description: Update an existing Berry.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Berry'
+      tags:
+        - Berry
+    delete:
+      summary: Delete Berry
+      operationId: deleteBerry
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+      tags:
+        - Berry
+      description: Delete a Berry
+tags:
+  - name: Berry
+security:
+  - guengel-sso: []

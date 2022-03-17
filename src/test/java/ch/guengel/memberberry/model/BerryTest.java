@@ -56,7 +56,7 @@ class BerryTest {
         berry.title(new String(new char[255]).replace("\0", "a"));
         berry.state(BerryState.OPEN);
         berry.description(null);
-        berry.setTag(null);
+        berry.setTags(null);
         return berry;
     }
 

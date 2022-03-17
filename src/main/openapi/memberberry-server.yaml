@@ -23,7 +23,7 @@ components:
           authorizationUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/auth'
           tokenUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/token'
           refreshUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/token'
-          scopes: {}
+          scopes: { }
       description: ''
   schemas:
     Berry:
@@ -41,7 +41,7 @@ components:
         description:
           type: string
           description: Optional long description of the Berry.
-        tag:
+        tags:
           type: array
           description: Tags associated with this Berry
           uniqueItems: true
@@ -293,6 +293,6 @@ paths:
       tags:
         - BerryV1
 security:
-  - guengel-sso: []
+  - guengel-sso: [ ]
 tags:
   - name: BerryV1

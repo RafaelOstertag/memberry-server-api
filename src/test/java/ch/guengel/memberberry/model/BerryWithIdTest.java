@@ -57,6 +57,7 @@ class BerryWithIdTest {
         berryWithId.created(OffsetDateTime.now());
         berryWithId.description(null);
         berryWithId.updated(null);
+        berryWithId.setTag(null);
         return berryWithId;
     }
 

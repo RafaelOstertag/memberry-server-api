@@ -41,6 +41,12 @@ components:
         description:
           type: string
           description: Optional long description of the Berry.
+        tag:
+          type: array
+          description: Tags associated with this Berry
+          uniqueItems: true
+          items:
+            type: string
       required:
         - title
         - state
@@ -129,8 +135,6 @@ paths:
   /v1/berries:
     get:
       summary: Get Berries
-      tags:
-        - Berry
       operationId: getBerries
       description: Get all Berries.
       parameters:
@@ -183,6 +187,8 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '401':
           $ref: '#/components/responses/ErrorResponse'
+      tags:
+        - BerryV1
     post:
       summary: Create Berry
       operationId: createBerry
@@ -206,7 +212,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Berry'
       tags:
-        - Berry
+        - BerryV1
   '/v1/berries/{berry-id}':
     parameters:
       - schema:
@@ -216,8 +222,6 @@ paths:
         required: true
     get:
       summary: Get Berry
-      tags:
-        - Berry
       responses:
         '200':
           description: OK
@@ -233,6 +237,8 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
       operationId: getBerry
       description: Get a Berry by ID
+      tags:
+        - BerryV1
     put:
       summary: Update Berry
       operationId: updateBerry
@@ -254,7 +260,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Berry'
       tags:
-        - Berry
+        - BerryV1
     delete:
       summary: Delete Berry
       operationId: deleteBerry
@@ -265,10 +271,28 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '403':
           $ref: '#/components/responses/ErrorResponse'
-      tags:
-        - Berry
       description: Delete a Berry
-tags:
-  - name: Berry
+      tags:
+        - BerryV1
+  /v1/berries/tags:
+    get:
+      summary: Get tags
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+      operationId: getAllTags
+      description: Get all tags assigned to Berries
+      tags:
+        - BerryV1
 security:
   - guengel-sso: []
+tags:
+  - name: BerryV1

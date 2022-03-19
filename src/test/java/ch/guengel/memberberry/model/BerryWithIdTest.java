@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +26,7 @@ class BerryWithIdTest {
         var constraintViolations = validator.validate(berryWithId);
         var constraintViolationStrings = ConstraintViolationUtils.toStringList(constraintViolations);
         assertThat(constraintViolationStrings)
-                .containsExactlyInAnyOrder("state:NotNull", "title:NotNull", "created:NotNull");
+                .containsExactlyInAnyOrder("state:NotNull", "title:NotNull", "created:NotNull", "id:NotNull");
     }
 
     @Test
@@ -52,6 +53,7 @@ class BerryWithIdTest {
 
     private BerryWithId createValidBerryWithId() {
         var berryWithId = new BerryWithId();
+        berryWithId.id(UUID.randomUUID());
         berryWithId.title(new String(new char[255]).replace("\0", "a"));
         berryWithId.state(BerryState.OPEN);
         berryWithId.created(OffsetDateTime.now());

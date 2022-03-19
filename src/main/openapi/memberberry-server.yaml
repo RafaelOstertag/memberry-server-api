@@ -68,14 +68,16 @@ components:
       title: Berry with Id
       description: Berry with an ID.
       allOf:
-        - $ref: '#/components/schemas/BerryID'
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Id of the Berry
+              format: uuid
+          required:
+            - id
         - $ref: '#/components/schemas/Berry'
         - $ref: '#/components/schemas/BerryAudit'
-    BerryID:
-      type: string
-      title: Berry ID
-      description: ID of a Berry
-      minLength: 1
     BerryState:
       type: string
       title: Berry State

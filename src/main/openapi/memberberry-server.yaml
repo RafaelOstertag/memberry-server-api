@@ -130,6 +130,14 @@ components:
           - open
           - closed
       description: State of the Berries
+    berry-id:
+      name: berry-id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Berry Id
   responses:
     ErrorResponse:
       description: Generic error response
@@ -221,11 +229,7 @@ paths:
         - BerryV1
   '/v1/berries/{berry-id}':
     parameters:
-      - schema:
-          type: string
-        name: berry-id
-        in: path
-        required: true
+      - $ref: '#/components/parameters/berry-id'
     get:
       summary: Get Berry
       responses:

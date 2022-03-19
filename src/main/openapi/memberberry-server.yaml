@@ -23,7 +23,7 @@ components:
           authorizationUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/auth'
           tokenUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/token'
           refreshUrl: 'https://sso.guengel.ch/auth/realms/memberberry/protocol/openid-connect/token'
-          scopes: { }
+          scopes: {}
       description: ''
   schemas:
     Berry:
@@ -58,8 +58,12 @@ components:
         reason:
           type: string
           description: Reason of the error
+        type:
+          type: string
+          description: Type of error
       required:
         - reason
+        - type
     BerryWithId:
       title: Berry with Id
       description: Berry with an ID.
@@ -293,6 +297,6 @@ paths:
       tags:
         - BerryV1
 security:
-  - guengel-sso: [ ]
+  - guengel-sso: []
 tags:
   - name: BerryV1

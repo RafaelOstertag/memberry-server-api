@@ -17,13 +17,14 @@ class ErrorMessageTest {
         var constraintViolations = validator.validate(errorMessage);
         var constraintViolationStrings = ConstraintViolationUtils.toStringList(constraintViolations);
         assertThat(constraintViolationStrings)
-                .containsExactlyInAnyOrder("reason:NotNull");
+                .containsExactlyInAnyOrder("reason:NotNull", "type:NotNull");
     }
 
     @Test
     void shouldNotFailOnValidErrorMessage() {
         var errorMessage = new ErrorMessage();
         errorMessage.reason("a reason");
+        errorMessage.type("type");
 
         var constraintViolations = validator.validate(errorMessage);
         assertThat(constraintViolations).isEmpty();

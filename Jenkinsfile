@@ -55,6 +55,22 @@ pipeline {
                 }
             }
         }
+
+        stage('Trigger NPM API build') {
+            when {
+                not {
+                    triggeredBy "TimerTrigger"
+                }
+            }
+
+            environment {
+                VERSION = sh returnStdout: true, script: "mvn -B help:evaluate '-Dexpression=project.version' | grep -v '\\[' | tr -d '\\n'"
+            }
+
+            steps {
+                build wait: false, job: '../memberberry-angular-api/main', parameters: [string(name: 'VERSION', value: env.VERSION)]
+            }
+        }
     }
 
     post {

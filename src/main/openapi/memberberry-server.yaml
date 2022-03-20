@@ -38,6 +38,8 @@ components:
           maxLength: 255
         state:
           $ref: '#/components/schemas/BerryState'
+        priority:
+          $ref: '#/components/schemas/BerryPriority'
         description:
           type: string
           description: Optional long description of the Berry.
@@ -50,6 +52,7 @@ components:
       required:
         - title
         - state
+        - priority
     ErrorMessage:
       title: Error Message
       type: object
@@ -100,6 +103,14 @@ components:
           description: 'Date/Time the Berry has been updated, if available.'
       required:
         - created
+    BerryPriority:
+      type: string
+      title: Berry Priority
+      description: Priority of a Berry
+      enum:
+        - high
+        - medium
+        - low
   parameters:
     page-size:
       name: page-size

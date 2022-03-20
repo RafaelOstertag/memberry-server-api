@@ -26,7 +26,7 @@ class BerryWithIdTest {
         var constraintViolations = validator.validate(berryWithId);
         var constraintViolationStrings = ConstraintViolationUtils.toStringList(constraintViolations);
         assertThat(constraintViolationStrings)
-                .containsExactlyInAnyOrder("state:NotNull", "title:NotNull", "created:NotNull", "id:NotNull");
+                .containsExactlyInAnyOrder("state:NotNull", "title:NotNull", "created:NotNull", "id:NotNull", "priority:NotNull");
     }
 
     @Test
@@ -56,6 +56,7 @@ class BerryWithIdTest {
         berryWithId.id(UUID.randomUUID());
         berryWithId.title(new String(new char[255]).replace("\0", "a"));
         berryWithId.state(BerryState.OPEN);
+        berryWithId.priority(BerryPriority.MEDIUM);
         berryWithId.created(OffsetDateTime.now());
         berryWithId.description(null);
         berryWithId.updated(null);

@@ -26,7 +26,7 @@ class BerryTest {
         var constraintViolations = validator.validate(berry);
         var constraintViolationStrings = ConstraintViolationUtils.toStringList(constraintViolations);
         assertThat(constraintViolationStrings)
-                .containsExactlyInAnyOrder("state:NotNull", "title:NotNull");
+                .containsExactlyInAnyOrder("state:NotNull", "title:NotNull", "priority:NotNull");
     }
 
     @Test
@@ -55,6 +55,7 @@ class BerryTest {
         var berry = new Berry();
         berry.title(new String(new char[255]).replace("\0", "a"));
         berry.state(BerryState.OPEN);
+        berry.priority(BerryPriority.MEDIUM);
         berry.description(null);
         berry.setTags(null);
         return berry;

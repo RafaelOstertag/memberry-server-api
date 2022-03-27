@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  version: '1.0'
+  version: '1.1'
   title: Memberberry
   description: Memberberry API. A Berry is a ToDo list entry.
   contact:
@@ -149,6 +149,25 @@ components:
         type: string
         format: uuid
       description: Berry Id
+    berry-priority:
+      name: berry-priority
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - high
+          - medium
+          - low
+      description: Priority of the Berries
+    berry-tag:
+      name: berry-tag
+      in: query
+      required: false
+      schema:
+        type: string
+        minLength: 1
+      description: Tag of the Berries
   responses:
     ErrorResponse:
       description: Generic error response
@@ -166,6 +185,8 @@ paths:
         - $ref: '#/components/parameters/page-size'
         - $ref: '#/components/parameters/page-index'
         - $ref: '#/components/parameters/berry-state'
+        - $ref: '#/components/parameters/berry-priority'
+        - $ref: '#/components/parameters/berry-tag'
       responses:
         '200':
           description: OK

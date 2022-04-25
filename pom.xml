@@ -6,7 +6,7 @@
 
     <groupId>ch.guengel.memberberry</groupId>
     <artifactId>memberberry-api</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Memberberry API</name>
@@ -45,14 +45,14 @@
 
     <distributionManagement>
         <repository>
-            <id>memberberry-maven</id>
-            <name>Memberberry Maven Repository</name>
-            <url>https://colossus.kruemel.home/nexus/repository/memberberry/</url>
+            <id>rafaelostertag.jfrog.io</id>
+            <name>JFrog Release Repository</name>
+            <url>https://rafaelostertag.jfrog.io/artifactory/maven-release</url>
         </repository>
         <snapshotRepository>
-            <id>memberberry-maven-snapshot</id>
-            <name>Memberberry Maven Snapshot Repository</name>
-            <url>https://colossus.kruemel.home/nexus/repository/memberberry-snapshot/</url>
+            <id>rafaelostertag.jfrog.io</id>
+            <name>JFrog Snapshot Repository</name>
+            <url>https://rafaelostertag.jfrog.io/artifactory/maven-snapshot</url>
         </snapshotRepository>
     </distributionManagement>
 

@@ -1,0 +1,43 @@
+version: 2.1
+
+orbs:
+  c: rafaelostertag/common-orb@1.17.0
+
+workflows:
+  build-any-branch:
+    jobs:
+      - c/maven-build-and-test:
+          name: build-and-test
+          sonar-project-key: "not-used"
+          no-sonar: true
+          context:
+            - repository-read
+      - c/maven-deploy-artifacts:
+          name: deploy-maven-artifact
+          requires:
+            - build-and-test
+          context:
+            - maven-repository-write
+      - c/maven-trigger-pipeline-with-version:
+          name: trigger-memberberry-api-angular
+          project-name: memberberry-api-angular
+          branch-name: main
+          allow-snapshot: true
+          context:
+            - circle-ci
+          requires:
+            - deploy-maven-artifact
+
+  daily-dependency-check:
+    triggers:
+      - schedule:
+          cron: "21 4 * * *"
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+    jobs:
+      - c/maven-dependency-check:
+          context:
+            - repository-read
